@@ -320,5 +320,119 @@
 
         });
     </script>
+    <script>
+    // --- Floating Audio Player Logic ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const playerContainer = document.getElementById('audio-player-container');
+        const openPlayerBtn = document.getElementById('open-player-btn');
+        const closePlayerBtn = document.getElementById('close-player-btn');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const audio = document.getElementById('audio-element');
+
+        const playIcon = `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>`;
+        const pauseIcon = `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5.75 3a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75A.75.75 0 007.25 3h-1.5zm6.5 0a.75.75 0 00-.75.75v12.5c0 .414.336.75.75.75h1.5a.75.75 0 00.75-.75V3.75a.75.75 0 00-.75-.75h-1.5z"></path></svg>`;
+
+        playPauseBtn.innerHTML = playIcon;
+
+        const formatTime = (seconds) => {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        };
+
+        audio.addEventListener('loadedmetadata', () => {
+            progressBar.max = audio.duration;
+            timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            progressBar.value = audio.currentTime;
+            timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        });
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = playIcon;
+            }
+        });
+
+        progressBar.addEventListener('input', () => {
+            audio.currentTime = progressBar.value;
+        });
+
+        openPlayerBtn.addEventListener('click', () => {
+            playerContainer.classList.remove('translate-y-full');
+            openPlayerBtn.classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        closePlayerBtn.addEventListener('click', () => {
+            playerContainer.classList.add('translate-y-full');
+            openPlayerBtn.classList.remove('opacity-0', 'pointer-events-none');
+        });
+
+        // --- Smart Resume Logic ---
+        window.addEventListener('beforeunload', () => {
+            const audioState = {
+                currentTime: audio.currentTime,
+                paused: audio.paused,
+                duration: audio.duration,
+                isOpen: !playerContainer.classList.contains('translate-y-full')
+            };
+            localStorage.setItem('audioPlayerState', JSON.stringify(audioState));
+        });
+
+        const savedState = JSON.parse(localStorage.getItem('audioPlayerState'));
+        if (savedState) {
+            setTimeout(() => {
+                if (savedState.duration && isFinite(savedState.duration)) {
+                    audio.currentTime = savedState.currentTime;
+                    progressBar.max = savedState.duration;
+                    progressBar.value = savedState.currentTime;
+                    timeDisplay.textContent = `${formatTime(savedState.currentTime)} / ${formatTime(savedState.duration)}`;
+                }
+                if (!savedState.paused) {
+                    audio.play();
+                    playPauseBtn.innerHTML = pauseIcon;
+                }
+                if (savedState.isOpen) {
+                    playerContainer.classList.remove('translate-y-full');
+                    openPlayerBtn.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }, 100);
+        }
+    });
+    </script>
+    <!-- Floating Audio Player -->
+    <div id="audio-player-container" class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg shadow-lg z-50 p-4 transition-transform duration-500 translate-y-full">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button id="play-pause-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-600 text-white hover:bg-emerald-700 transition">
+                    <!-- Play/Pause Icon will be inserted here by JS -->
+                </button>
+                <div>
+                    <p class="font-bold text-slate-800">Seedling Bio: Audio Overview</p>
+                    <p id="time-display" class="text-sm text-slate-500">0:00 / 0:00</p>
+                </div>
+            </div>
+            <div class="flex-grow mx-8">
+                <input type="range" id="progress-bar" value="0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+            </div>
+            <button id="close-player-btn" class="text-slate-500 hover:text-slate-800 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <audio id="audio-element" src="https://drive.google.com/uc?export=download&id=1_C3ny7Ku-UFITXTngXFjFzpMMF2MNT00" preload="metadata"></audio>
+    </div>
+
+    <!-- Button to Open Player -->
+    <button id="open-player-btn" class="fixed bottom-4 right-4 bg-emerald-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-emerald-700 transition-transform transform hover:scale-110">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M20 4v16m-7-12v8"></path></svg>
+    </button>
 </body>
 </html>
