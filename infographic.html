@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seedling Bio: The Investment Opportunity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Brilliant Blues" - Using #0077B6 for primary headings, #00B4D8 for accents and charts, and #CAF0F8 for background cards. This creates a vibrant, professional, and tech-forward aesthetic suitable for a biotech innovator. -->
+    <!-- Application Structure Plan: A top-down narrative infographic designed to guide an investor through a compelling story. It starts with the problem (The Crisis), presents the elegant solution (The Superior Model), quantifies the reward (The Market Opportunity), details the execution plan (The Strategic Blueprint), and shows the timeline (The Roadmap). This structure logically moves from the "why" to the "how," making a complex business plan digestible and persuasive. -->
+    <!-- Visualization & Content Choices: 
+        - The Crisis: Data Point -> Unsustainable sourcing. Goal -> Inform/Shock. Viz -> "Single Big Number" for sharks killed. Justification -> High-impact, emotional hook. Method -> HTML/CSS.
+        - The Model: Data Point -> Fermentation vs. Agriculture. Goal -> Compare. Viz -> Two-column HTML/CSS comparison card with Unicode icons. Justification -> Simple visual contrast is more powerful than a complex chart for this conceptual point. Method -> HTML/CSS.
+        - The Market Opportunity: Data Point -> Market sizes & growth for Squalene/Paclitaxel. Goal -> Compare/Change. Viz -> Two separate Bar Charts. Justification -> Bar charts are ideal for direct value comparison and showing growth. Library -> Chart.js/Canvas.
+        - The Strategic Blueprint: Data Point -> Regulatory path. Goal -> Organize. Viz -> Horizontal Flow Chart. Justification -> A linear flow is the most intuitive way to show a sequential process. Method -> HTML/CSS.
+        - The Roadmap: Data Point -> 24-month plan. Goal -> Change. Viz -> Vertical Timeline. Justification -> Classic, easily understood visualization for phased progress. Method -> HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 350px;
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #90e0ef;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <div class="container mx-auto px-4 py-12">
+
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-[#0077B6]">🌱 Seedling Bio</h1>
+            <p class="mt-4 text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto">Revolutionizing Biomanufacturing by Solving Critical Supply Chain Crises</p>
+        </header>
+
+        <!-- Back to Main Plan Link -->
+        <div class="text-center mb-12">
+            <a href="index.html" class="text-[#0077B6] hover:text-[#00B4D8] font-semibold transition-colors">
+                &larr; Back to Full Strategic Plan
+            </a>
+        </div>
+
+        <!-- Section 1: The Crisis -->
+        <section class="mb-20">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0077B6]">The Crisis in Our Supply Chains</h2>
+                <p class="mt-3 max-w-2xl mx-auto text-slate-500">The world's most valuable cosmetic and pharmaceutical ingredients are sourced from unethical and unsustainable systems. This creates massive risk for brands and our planet.</p>
+            </div>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="text-7xl mb-4">🦈</div>
+                    <h3 class="text-2xl font-bold text-slate-800">The Squalene Problem</h3>
+                    <p class="text-5xl md:text-6xl font-extrabold text-[#00B4D8] my-4">6 Million</p>
+                    <p class="text-slate-600">Sharks are killed annually for liver oil to produce squalene, a common cosmetic moisturizer. This is environmentally catastrophic and ethically indefensible.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="text-7xl mb-4">🌲</div>
+                    <h3 class="text-2xl font-bold text-slate-800">The Paclitaxel Problem</h3>
+                    <p class="text-5xl md:text-6xl font-extrabold text-[#00B4D8] my-4">3 Tons</p>
+                    <p class="text-slate-600">Of bark from slow-growing, endangered Pacific Yew trees are needed to produce just 1 kg of a cornerstone cancer therapy, creating severe supply bottlenecks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Superior Model -->
+        <section class="mb-20">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0077B6]">A Fundamentally Superior Model</h2>
+                <p class="mt-3 max-w-2xl mx-auto text-slate-500">Seedling Bio's advantage isn't just technology—it's a more capital-efficient model. We leverage existing infrastructure, avoiding the immense costs that caused others to fail.</p>
+            </div>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white border-4 border-red-200 rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-5xl mb-3">🏭</div>
+                    <h3 class="text-2xl font-bold text-red-800">Fermentation Model</h3>
+                    <p class="font-semibold text-red-600 mb-4">(e.g., Amyris - Bankrupt 2023)</p>
+                    <ul class="text-left space-y-2 text-slate-700">
+                        <li><span class="text-red-500 mr-2">❌</span> Massive capital needed for bioreactors.</li>
+                        <li><span class="text-red-500 mr-2">❌</span> High operational and energy costs.</li>
+                        <li><span class="text-red-500 mr-2">❌</span> Scaling is linear, expensive, and slow.</li>
+                    </ul>
+                </div>
+                <div class="bg-white border-4 border-green-200 rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-5xl mb-3">🌱</div>
+                    <h3 class="text-2xl font-bold text-green-800">Seedling Bio's Ag-Model</h3>
+                    <p class="font-semibold text-green-600 mb-4">Capital-Efficient & Scalable</p>
+                    <ul class="text-left space-y-2 text-slate-700">
+                        <li><span class="text-green-500 mr-2">✅</span> Leverages existing farm infrastructure.</li>
+                        <li><span class="text-green-500 mr-2">✅</span> Soybeans are solar-powered bioreactors.</li>
+                        <li><span class="text-green-500 mr-2">✅</span> Scaling is exponential, affordable, and fast.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Market Opportunity -->
+        <section class="mb-20">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0077B6]">Quantifying the Opportunity</h2>
+                <p class="mt-3 max-w-2xl mx-auto text-slate-500">Our platform targets large, established, and growing API markets ready for a sustainable, reliable, and domestically-sourced alternative.</p>
+            </div>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-center text-slate-800">Squalene API Market Growth</h3>
+                    <p class="text-center text-slate-500 mb-4">Driven by ethical consumer demand in cosmetics.</p>
+                    <div class="chart-container">
+                        <canvas id="squaleneMarketChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-center text-slate-800">Paclitaxel API Market Growth</h3>
+                    <p class="text-center text-slate-500 mb-4">A critical, supply-constrained oncology drug.</p>
+                    <div class="chart-container">
+                        <canvas id="paclitaxelMarketChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Strategic Blueprint -->
+        <section class="mb-20">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0077B6]">Our Strategic Blueprint</h2>
+                <p class="mt-3 max-w-2xl mx-auto text-slate-500">A multi-pronged strategy to build a defensible market-leading position.</p>
+            </div>
+            <div class="mt-10 bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-2xl font-bold text-center text-slate-800 mb-8">A Clear & Proven Regulatory Pathway</h3>
+                <p class="text-center max-w-3xl mx-auto text-slate-500 mb-10">The US framework for plant-made pharmaceuticals is well-established. Our strategy involves proactive, parallel engagement with the key agencies, building on the success of pioneers like Protalix BioTherapeutics.</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-2">📜</div>
+                        <h4 class="font-bold text-lg text-[#0077B6]">USDA</h4>
+                        <p class="text-sm">Field Trial Permitting</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">→</div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-2">🛡️</div>
+                        <h4 class="font-bold text-lg text-[#0077B6]">EPA</h4>
+                        <p class="text-sm">Pesticidal Trait Oversight</p>
+                    </div>
+                    <div class="flow-arrow hidden md:block">→</div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-2">💊</div>
+                        <h4 class="font-bold text-lg text-[#0077B6]">FDA</h4>
+                        <p class="text-sm">Final Product Approval</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Roadmap -->
+        <section>
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0077B6]">24-Month Execution Roadmap</h2>
+                <p class="mt-3 max-w-2xl mx-auto text-slate-500">An actionable plan to de-risk the company and achieve key value-inflection milestones.</p>
+            </div>
+            <div class="mt-12 max-w-3xl mx-auto">
+                <div class="relative pl-8">
+                    <div class="absolute left-3 top-0 bottom-0 w-1 bg-[#90E0EF] rounded"></div>
+                    <div class="mb-12 relative">
+                        <div class="absolute -left-1.5 top-1 w-8 h-8 bg-[#0077B6] rounded-full border-4 border-white"></div>
+                        <div class="ml-10 bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold text-slate-800">Phase 1: Foundation & Fundraising (Months 0-6)</h3>
+                            <ul class="mt-2 list-disc list-inside text-slate-600">
+                                <li>File foundational utility patents.</li>
+                                <li>Submit NSF SBIR grant application.</li>
+                                <li>Begin outreach to Tier 1 VCs.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-12 relative">
+                        <div class="absolute -left-1.5 top-1 w-8 h-8 bg-[#0077B6] rounded-full border-4 border-white"></div>
+                        <div class="ml-10 bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold text-slate-800">Phase 2: De-Risking & Development (Months 6-18)</h3>
+                            <ul class="mt-2 list-disc list-inside text-slate-600">
+                                <li>Close Seed or Series A round.</li>
+                                <li>Achieve target compound yield & purity goals.</li>
+                                <li>Conduct Pre-IND meeting with FDA.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-1.5 top-1 w-8 h-8 bg-[#0077B6] rounded-full border-4 border-white"></div>
+                        <div class="ml-10 bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold text-slate-800">Phase 3: Scaling & Validation (Months 18-24)</h3>
+                            <ul class="mt-2 list-disc list-inside text-slate-600">
+                                <li>File IND application with FDA.</li>
+                                <li>Conduct scaled-up cultivation.</li>
+                                <li>Secure first commercial agreement.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartDefaultOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#0077B6',
+                        titleFont: { weight: 'bold' },
+                        bodyFont: { size: 14 },
+                        padding: 12,
+                        cornerRadius: 4,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                }
+                                return label;
+                            },
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#e2e8f0'
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                weight: '500'
+                            },
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', { notation: 'compact', compactDisplay: 'short' }).format(value);
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                           color: '#334155',
+                           font: {
+                               weight: '600',
+                               size: 14
+                           }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            };
+            
+            const squaleneCtx = document.getElementById('squaleneMarketChart').getContext('2d');
+            new Chart(squaleneCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024E', '2030E'],
+                    datasets: [{
+                        label: 'Market Value',
+                        data: [165700000, 307900000],
+                        backgroundColor: ['#90E0EF', '#00B4D8'],
+                        borderColor: '#0077B6',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: chartDefaultOptions
+            });
+
+            const paclitaxelCtx = document.getElementById('paclitaxelMarketChart').getContext('2d');
+            new Chart(paclitaxelCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024E', '2032E'],
+                    datasets: [{
+                        label: 'Market Value',
+                        data: [133000000, 262190000], 
+                        backgroundColor: ['#90E0EF', '#00B4D8'],
+                        borderColor: '#0077B6',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: chartDefaultOptions
+            });
+
+        });
+    </script>
+</body>
+</html>
