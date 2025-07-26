@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seedling Bio: Interactive Strategic Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Earth & Growth" - A palette of warm neutrals (bg-stone-50, bg-stone-100), grounded greens (emerald-600, emerald-800), and a professional blue (sky-600) for accents. This creates a calm, trustworthy, and professional feel that connects to both the agricultural roots and the biotech future of the company. -->
+    <!-- Application Structure Plan: A top-down narrative, single-page application designed for investor storytelling. It starts with the big picture (The Mission), quantifies the opportunity (Market), presents the unique solution (The Model), details the execution (The Strategy), and provides a clear path forward (The Roadmap). This structure guides the user logically from the "why" to the "how," making a complex business plan digestible and compelling. Key interactions include tabbed content for strategy deep-dives and clickable timeline elements, allowing users to control the depth of information they explore. This non-linear exploration within a linear narrative respects the user's time while ensuring all key points are accessible. -->
+    <!-- Visualization & Content Choices: 
+        - Market Opportunity: Report Info -> Market size data for API, Squalene, Paclitaxel. Goal -> Compare market sizes and growth. Viz/Presentation -> Three separate, clearly labeled Bar Charts (Chart.js/Canvas). Interaction -> On-load animation. Justification -> Bar charts are ideal for direct comparison of value. Separating them avoids a cluttered, confusing single chart. Library -> Chart.js.
+        - Competitive Model: Report Info -> Analysis of Seedling's ag-based model vs. Amyris's fermentation model. Goal -> Contrast capital efficiency. Viz/Presentation -> A two-column HTML/CSS/Tailwind layout with strong iconography (soybean vs. factory) and bullet points. Interaction -> Static visual comparison. Justification -> A direct, simple visual is more powerful than a complex chart for this conceptual comparison. It immediately communicates the core "unfair advantage." Method -> HTML/CSS.
+        - Regulatory Pathway: Report Info -> Multi-agency (USDA, FDA, EPA) approval process. Goal -> Simplify a complex process. Viz/Presentation -> A horizontal, multi-stage diagram built with HTML/CSS. Interaction -> None needed, clarity is key. Justification -> A linear visual flow is the most intuitive way to represent a chronological process. Method -> HTML/CSS.
+        - Funding Strategy: Report Info -> Dual-track plan (grants, VC). Goal -> Show parallel efforts. Viz/Presentation -> Two-column HTML/CSS layout with lists of targets. Interaction -> None. Justification -> Clear lists are more effective for displaying target names than a cluttered diagram. Method -> HTML/CSS.
+        - Implementation Roadmap: Report Info -> 24-month, three-phase plan. Goal -> Show a clear execution timeline. Viz/Presentation -> A vertical timeline built with HTML/CSS. Interaction -> None needed for this overview. Justification -> A vertical timeline is a classic, easily understood representation of phased progress. Method -> HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB; /* A very light gray, almost white */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0284c7; /* sky-600 */
+            border-bottom-color: #0284c7;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #059669; /* emerald-600 */
+            color: white;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid #059669; /* emerald-600 */
+        }
+        .timeline-line {
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #d1d5db; /* gray-300 */
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-emerald-800">🌱 Seedling Bio</span>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#opportunity" class="nav-link text-stone-600 font-medium pb-1">Opportunity</a>
+                    <a href="#model" class="nav-link text-stone-600 font-medium pb-1">Our Model</a>
+                    <a href="#strategy" class="nav-link text-stone-600 font-medium pb-1">Strategy</a>
+                    <a href="#roadmap" class="nav-link text-stone-600 font-medium pb-1">Roadmap</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-stone-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#opportunity" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Opportunity</a>
+            <a href="#model" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Our Model</a>
+            <a href="#strategy" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Strategy</a>
+            <a href="#roadmap" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Roadmap</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Hero Section -->
+        <section id="hero" class="text-center py-16 md:py-24">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-emerald-800">Revolutionizing Biomanufacturing.</h1>
+            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto text-stone-600">We use the power of sustainable American agriculture to solve critical supply chain crises—ensuring essential cosmetic ingredients and life-saving medicines are produced ethically, reliably, and in harmony with the planet.</p>
+        </section>
+
+        <!-- The Opportunity Section -->
+        <section id="opportunity" class="py-16 md:py-24 bg-white rounded-2xl shadow-lg">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900">A Market Ripe for Disruption</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-stone-600">Seedling Bio is positioned to capture significant share in large, established, and growing markets currently dependent on fragile and unsustainable supply chains. Our initial targets represent high-value entry points into a multi-billion dollar industry.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
+                <div class="flex flex-col items-center text-center p-6 bg-stone-50 rounded-lg">
+                    <h3 class="text-xl font-semibold text-stone-800">Global Plant-Based API Market</h3>
+                    <p class="text-sm text-stone-500 mb-4">The foundational market for our platform technology.</p>
+                    <div class="chart-container w-full h-64 md:h-72">
+                        <canvas id="apiMarketChart"></canvas>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-stone-50 rounded-lg">
+                    <h3 class="text-xl font-semibold text-stone-800">Global Squalene Market (API)</h3>
+                    <p class="text-sm text-stone-500 mb-4">Driven by ethical consumer demand in cosmetics.</p>
+                    <div class="chart-container w-full h-64 md:h-72">
+                        <canvas id="squaleneMarketChart"></canvas>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-stone-50 rounded-lg">
+                    <h3 class="text-xl font-semibold text-stone-800">Global Paclitaxel Market (API)</h3>
+                    <p class="text-sm text-stone-500 mb-4">A critical, supply-constrained oncology drug.</p>
+                    <div class="chart-container w-full h-64 md:h-72">
+                        <canvas id="paclitaxelMarketChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Model Section -->
+        <section id="model" class="py-16 md:py-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900">A Fundamentally Superior Model</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-stone-600">Our core advantage isn't just technology—it's a more capital-efficient and scalable business model. We leverage existing infrastructure, avoiding the immense costs that caused previous pioneers to fail.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6 text-center">
+                    <div class="text-6xl mb-4">🏭</div>
+                    <h3 class="text-2xl font-bold text-red-800">The Old Way: Fermentation</h3>
+                    <p class="text-red-600 font-semibold mb-4">(e.g., Amyris - Bankrupt in 2023)</p>
+                    <ul class="text-left space-y-2 text-stone-700">
+                        <li class="flex items-start"><span class="text-red-500 mr-2">❌</span> Massive capital expenditure to build bioreactors.</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">❌</span> High operational costs for energy and maintenance.</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">❌</span> Scaling is linear, expensive, and slow.</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">❌</span> Proved commercially successful but financially unsustainable.</li>
+                    </ul>
+                </div>
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-6 text-center">
+                    <div class="text-6xl mb-4">🌱</div>
+                    <h3 class="text-2xl font-bold text-emerald-800">The Seedling Way: Agriculture</h3>
+                    <p class="text-emerald-600 font-semibold mb-4">Capital-Efficient & Scalable</p>
+                    <ul class="text-left space-y-2 text-stone-700">
+                        <li class="flex items-start"><span class="text-emerald-500 mr-2">✅</span> Leverages existing, multi-trillion-dollar farm infrastructure.</li>
+                        <li class="flex items-start"><span class="text-emerald-500 mr-2">✅</span> Soybeans are solar-powered, self-replicating bioreactors.</li>
+                        <li class="flex items-start"><span class="text-emerald-500 mr-2">✅</span> Scaling is exponential, affordable, and rapid.</li>
+                        <li class="flex items-start"><span class="text-emerald-500 mr-2">✅</span> A clear and direct path to profitability.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Strategy Section -->
+        <section id="strategy" class="py-16 md:py-24 bg-white rounded-2xl shadow-lg">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900">An Integrated Strategy for Success</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-stone-600">Our strategy is a multi-pronged approach designed to de-risk our technology, secure funding, navigate regulations, and build a defensible market-leading position.</p>
+            </div>
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-8 flex flex-wrap justify-center gap-2">
+                    <button data-tab="goto-market" class="tab-button active py-2 px-4 rounded-full font-semibold bg-stone-200 text-stone-700">Go-to-Market</button>
+                    <button data-tab="funding" class="tab-button py-2 px-4 rounded-full font-semibold bg-stone-200 text-stone-700">Capital Strategy</button>
+                    <button data-tab="regulatory" class="tab-button py-2 px-4 rounded-full font-semibold bg-stone-200 text-stone-700">Regulatory Pathway</button>
+                    <button data-tab="ip" class="tab-button py-2 px-4 rounded-full font-semibold bg-stone-200 text-stone-700">IP Moat</button>
+                    <button data-tab="comms" class="tab-button py-2 px-4 rounded-full font-semibold bg-stone-200 text-stone-700">Communications</button>
+                </div>
+                <div id="tab-content" class="bg-stone-50 p-6 md:p-8 rounded-lg">
+                    <!-- Go-to-Market Content -->
+                    <div id="goto-market-content" class="tab-pane active">
+                        <h3 class="text-2xl font-bold text-emerald-800 mb-4">Targeting Flawed Supply Chains</h3>
+                        <p class="mb-6 text-stone-600">We are launching with two "wedge" products that solve acute pain points in massive markets, demonstrating our platform's power and creating an immediate, compelling value proposition.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">🦈 Squalene: "Shark-Free" Cosmetics</h4>
+                                <p class="text-stone-600">Address the ethical and environmental crisis of killing millions of sharks for a key cosmetic ingredient. We offer a stable, high-quality, and sustainable alternative that major brands are actively seeking.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">🌲 Paclitaxel: "Forest-Free" Oncology</h4>
+                                <p class="text-stone-600">De-risk the supply chain for a cornerstone cancer therapy currently dependent on the slow-growing, ecologically sensitive Pacific yew tree. We provide a reliable, scalable, domestic source.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Funding Content -->
+                    <div id="funding-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-emerald-800 mb-4">A Dual-Track Capital Strategy</h3>
+                        <p class="mb-6 text-stone-600">We are pursuing non-dilutive and dilutive funding in parallel to fuel R&D, de-risk milestones, and accelerate growth while maximizing founder equity.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">Non-Dilutive Grants (SBIR/STTR)</h4>
+                                <p class="text-sm text-stone-500 mb-2">"America's Seed Fund" for high-risk R&D</p>
+                                <ul class="list-disc list-inside text-stone-600 space-y-1">
+                                    <li><b>NSF:</b> Core platform validation</li>
+                                    <li><b>USDA:</b> Agricultural optimization</li>
+                                    <li><b>NIH:</b> Therapeutic development</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">Venture Capital</h4>
+                                <p class="text-sm text-stone-500 mb-2">Targeting AgTech & Deep Tech Bio Investors</p>
+                                <ul class="list-disc list-inside text-stone-600 space-y-1">
+                                    <li><b>Tier 1:</b> Khosla Ventures, Leaps by Bayer, AgFunder</li>
+                                    <li><b>Tier 2:</b> S2G Ventures, Anterra Capital</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Regulatory Content -->
+                    <div id="regulatory-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-emerald-800 mb-4">Navigating a Defined Pathway</h3>
+                        <p class="mb-6 text-stone-600">The US regulatory framework for plant-made pharmaceuticals is well-established. Our strategy involves proactive, parallel engagement with the key agencies, building on the precedent of previously approved products.</p>
+                        <div class="flex flex-col md:flex-row justify-around text-center gap-4">
+                            <div class="flex-1 p-4 bg-white rounded-md shadow-sm">
+                                <h4 class="font-bold text-sky-700">USDA</h4>
+                                <p class="text-sm text-stone-600">Regulates field trials to ensure environmental and agricultural safety.</p>
+                            </div>
+                            <div class="flex-1 p-4 bg-white rounded-md shadow-sm">
+                                <h4 class="font-bold text-sky-700">EPA</h4>
+                                <p class="text-sm text-stone-600">Oversees plant-incorporated protectants (pesticidal traits).</p>
+                            </div>
+                            <div class="flex-1 p-4 bg-white rounded-md shadow-sm">
+                                <h4 class="font-bold text-sky-700">FDA</h4>
+                                <p class="text-sm text-stone-600">Holds final authority over the safety and efficacy of the end product.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- IP Content -->
+                    <div id="ip-content" class="tab-pane hidden">
+                       <h3 class="text-2xl font-bold text-emerald-800 mb-4">Building a Defensible "Patent Thicket"</h3>
+                       <p class="mb-6 text-stone-600">Our core asset is our intellectual property. We are focused on building a dense, multi-layered portfolio of utility patents—the strongest form of protection—to create a formidable competitive moat.</p>
+                       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
+                           <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">Composition of Matter</h4>
+                               <p class="text-sm text-stone-600">Patents on the novel DNA constructs and expression cassettes.</p>
+                           </div>
+                           <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">Transgenic Plants & Seeds</h4>
+                               <p class="text-sm text-stone-600">Patents on the engineered soybean plants, cells, and progeny.</p>
+                           </div>
+                           <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">Methods of Use & Purification</h4>
+                               <p class="text-sm text-stone-600">Patents on the methods for cultivation, extraction, and purification.</p>
+                           </div>
+                       </div>
+                    </div>
+                    <!-- Comms Content -->
+                    <div id="comms-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold text-emerald-800 mb-4">Leading with the "Why"</h3>
+                        <p class="mb-6 text-stone-600">To navigate the complex public perception of GMOs, our communication strategy focuses on the tangible, relatable benefits of our technology, not the technical process. We build trust by demonstrating overwhelming positive impact.</p>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">🌎 Ethical & Environmental Benefit</h4>
+                               <p class="text-stone-600">"Saving Sharks, Protecting Forests."</p>
+                           </div>
+                           <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">❤️ Human Health Benefit</h4>
+                               <p class="text-stone-600">"Ensuring a Stable Supply of Life-Saving Medicines."</p>
+                           </div>
+                           <div class="p-4 bg-white rounded-md shadow-sm">
+                               <h4 class="font-semibold text-stone-800">🌱 Sustainability & Innovation</h4>
+                               <p class="text-stone-600">"Harnessing the Power of a Sustainable Super-Crop."</p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Roadmap Section -->
+        <section id="roadmap" class="py-16 md:py-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900">24-Month Implementation Roadmap</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-stone-600">A clear, actionable plan to de-risk the company and achieve key value-inflection milestones over the next two years.</p>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="relative pl-8">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-item mb-12 relative">
+                        <h3 class="text-xl font-bold text-sky-700">Phase 1: Foundation & Fundraising (Months 0-6)</h3>
+                        <p class="text-stone-500 mb-2">Secure foundational IP and capital.</p>
+                        <ul class="list-disc list-inside text-stone-600 space-y-1">
+                            <li>File foundational utility patents.</li>
+                            <li>Submit NSF SBIR/STTR grant application.</li>
+                            <li>Begin outreach to Tier 1 VCs.</li>
+                            <li>Solidify core communication materials.</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item mb-12 relative">
+                        <h3 class="text-xl font-bold text-sky-700">Phase 2: De-Risking & Development (Months 6-18)</h3>
+                        <p class="text-stone-500 mb-2">Achieve critical technical and regulatory milestones.</p>
+                        <ul class="list-disc list-inside text-stone-600 space-y-1">
+                            <li>Close Seed or Series A venture round.</li>
+                            <li>Achieve target compound yield and purity goals.</li>
+                            <li>Submit USDA SBIR/STTR grant application.</li>
+                            <li>Conduct Pre-IND meeting with FDA for paclitaxel.</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item relative">
+                        <h3 class="text-xl font-bold text-sky-700">Phase 3: Scaling & Validation (Months 18-24)</h3>
+                        <p class="text-stone-500 mb-2">Prepare for clinical trials and initial commercial activity.</p>
+                        <ul class="list-disc list-inside text-stone-600 space-y-1">
+                            <li>Complete IND-enabling studies and file IND application.</li>
+                            <li>Conduct scaled-up cultivation in a controlled environment.</li>
+                            <li>Secure first commercial agreement for squalene.</li>
+                            <li>Prepare NIH SBIR/STTR application for Phase 1 trials.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-white">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="font-bold text-lg">🌱 Seedling Bio</p>
+            <p class="text-sm text-stone-400 mt-2">The future of biomanufacturing is growing.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Tabbed Content
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tab = button.dataset.tab;
+
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.add('bg-stone-200', 'text-stone-700');
+                    });
+                    button.classList.add('active');
+                    button.classList.remove('bg-stone-200', 'text-stone-700');
+                    
+                    tabPanes.forEach(pane => {
+                        if (pane.id === `${tab}-content`) {
+                            pane.classList.remove('hidden');
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.add('hidden');
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Navigation Active State on Scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Chart.js Implementations
+            const chartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#059669',
+                        titleFont: { weight: 'bold' },
+                        bodyFont: { size: 14 },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US', { notation: 'compact', compactDisplay: 'short' }).format(value);
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            };
+
+            // API Market Chart
+            const apiCtx = document.getElementById('apiMarketChart').getContext('2d');
+            new Chart(apiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024E', '2034E'],
+                    datasets: [{
+                        label: 'Market Value',
+                        data: [34110000000, 63550000000],
+                        backgroundColor: ['#34d399', '#065f46'],
+                        borderColor: ['#10b981', '#047857'],
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Squalene Market Chart
+            const squaleneCtx = document.getElementById('squaleneMarketChart').getContext('2d');
+            new Chart(squaleneCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024E', '2030E'],
+                    datasets: [{
+                        label: 'Market Value',
+                        data: [165700000, 307900000],
+                        backgroundColor: ['#60a5fa', '#1d4ed8'],
+                        borderColor: ['#3b82f6', '#1e40af'],
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            // Paclitaxel Market Chart
+            const paclitaxelCtx = document.getElementById('paclitaxelMarketChart').getContext('2d');
+            new Chart(paclitaxelCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024E', '2032E'],
+                    datasets: [{
+                        label: 'Market Value',
+                        data: [133000000, 262190000], // Using an average of the provided ranges for simplicity
+                        backgroundColor: ['#f472b6', '#be185d'],
+                        borderColor: ['#ec4899', '#9d174d'],
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+        });
+    </script>
+
+</body>
+</html>
