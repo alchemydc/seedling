@@ -562,11 +562,13 @@
         openPlayerBtn.addEventListener('click', () => {
             playerContainer.classList.remove('translate-y-full');
             openPlayerBtn.classList.add('opacity-0', 'pointer-events-none');
+            localStorage.removeItem('audioPlayerClosedByUser');
         });
 
         closePlayerBtn.addEventListener('click', () => {
             playerContainer.classList.add('translate-y-full');
             openPlayerBtn.classList.remove('opacity-0', 'pointer-events-none');
+            localStorage.setItem('audioPlayerClosedByUser', 'true');
         });
 
         // --- Smart Resume Logic ---
@@ -579,6 +581,15 @@
             };
             localStorage.setItem('audioPlayerState', JSON.stringify(audioState));
         });
+
+        // Expanded by default unless user closed it
+        if (localStorage.getItem('audioPlayerClosedByUser') === 'true') {
+            playerContainer.classList.add('translate-y-full');
+            openPlayerBtn.classList.remove('opacity-0', 'pointer-events-none');
+        } else {
+            playerContainer.classList.remove('translate-y-full');
+            openPlayerBtn.classList.add('opacity-0', 'pointer-events-none');
+        }
 
         const savedState = JSON.parse(localStorage.getItem('audioPlayerState'));
         if (savedState) {
@@ -603,7 +614,7 @@
     </script>
 
     <!-- Floating Audio Player -->
-    <div id="audio-player-container" class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg shadow-lg z-50 p-4 transition-transform duration-500 translate-y-full">
+    <div id="audio-player-container" class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg shadow-lg z-50 p-4 transition-transform duration-500">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <button id="play-pause-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-600 text-white hover:bg-emerald-700 transition">
