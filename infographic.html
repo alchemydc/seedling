@@ -407,7 +407,10 @@
                     progressBar.value = savedState.currentTime;
                     timeDisplay.textContent = `${formatTime(savedState.currentTime)} / ${formatTime(savedState.duration)}`;
                 }
-                // Do NOT auto-play audio on load; require user interaction for playback (mobile compatibility)
+                if (!savedState.paused) {
+                    audio.play();
+                    playPauseBtn.innerHTML = pauseIcon;
+                }
                 if (savedState.isOpen) {
                     playerContainer.classList.remove('translate-y-full');
                     openPlayerBtn.classList.add('opacity-0', 'pointer-events-none');

@@ -25,3 +25,9 @@ The implementation involved a multi-step debugging process to resolve asset host
 1. **Initial Attempt (Google Drive `.wav`)**: Failed due to Google's virus-scan modal on large files, which blocked direct embedding.
 2. **Second Attempt (Google Drive `.mp3`)**: Failed due to a `403 Forbidden` error caused by Google Drive's restrictive CORS (Cross-Origin Resource Sharing) policy.
 3. **Final Solution (Dropbox `.mp3`)**: The audio file was moved to Dropbox, and the sharing URL was modified (`dl=1`) to create a direct-stream link. This successfully resolved the hosting and CORS issues.
+
+### Mobile Autoplay Policy & Rollback
+
+- Attempted to update the audio player to require explicit user interaction for playback, aiming to comply with mobile browser autoplay restrictions.
+- User reported the fix did not work as expected; rolled back to the original logic that resumes playback automatically if it was playing before.
+- Current state: Audio player resumes automatically on navigation, prioritizing desktop/mobile consistency over strict autoplay policy compliance.
